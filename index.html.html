@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kvadratická funkcia – graf a vlastnosti</title>
+<style>
+:root{font-family:Arial,sans-serif;color:#202938;background:#f4f6fa}
+*{box-sizing:border-box}body{margin:0;padding:22px}.wrap{max-width:1050px;margin:auto}
+h1{font-size:27px;margin:0 0 7px}h2{font-size:20px;margin:0 0 12px}
+.intro{color:#566174;margin:0 0 20px}.panel{background:white;border:1px solid #dce2eb;border-radius:13px;padding:17px;margin:14px 0;box-shadow:0 2px 8px #17243a0a}
+.formula{font-family:Georgia,serif;font-size:19px;text-align:center;padding:10px;border-radius:8px;background:#f5f7fb;margin:7px 0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+label{font-weight:bold;font-size:14px}input{display:block;width:100%;padding:10px;margin-top:5px;border:1px solid #cbd3df;border-radius:8px;font-size:17px}
+button{padding:8px 11px;border:1px solid #cbd3df;background:#fff;border-radius:8px;cursor:pointer;margin:4px 4px 0 0}button:hover{background:#edf3ff}
+.small{font-size:14px;line-height:1.55;color:#566174}.blue{color:#2785d5}.red{color:#d95757}.green{color:#15956b}.orange{color:#c78316}.purple{color:#8b65c7}
+.stat{background:#f5f7fb;border-radius:9px;padding:11px;min-width:0}.stat b{display:block;margin-top:5px;overflow-wrap:anywhere}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;margin:10px 0}
+svg{width:100%;height:auto;background:#fbfcfe;border:1px solid #e2e7ef;border-radius:9px}
+.line{height:1px;background:#e2e7ef;margin:13px 0}.tag{font-size:12px;font-weight:bold;padding:4px 7px;border-radius:5px;background:#f1f3f8}
+@media(max-width:600px){body{padding:12px}.grid3{gap:7px}.panel{padding:13px}h1{font-size:23px}.formula{font-size:16px}}
+</style>
+</head>
+<body><main class="wrap">
+<h1>Kvadratická funkcia – graf a vlastnosti</h1>
+<p class="intro">Meň koeficienty a, b, c a sleduj, ako sa mení graf, korene, vrchol a vlastnosti paraboly. Rovnaké farby prepájajú výpočty s grafom.</p>
+<section class="panel">
+<h2>Zadaj koeficienty funkcie</h2>
+<div class="formula">f(x) = ax² + bx + c</div>
+<div class="grid3">
+<label>a – koeficient kvadratického člena (pri x²)<input id="a" type="number" step="0.5" value="1"></label>
+<label>b – koeficient absolútneho člena (pri x)<input id="b" type="number" step="0.5" value="-4"></label>
+<label>c – absolútny člen<input id="c" type="number" step="0.5" value="3"></label>
+</div>
+<p class="small">Rýchle príklady:</p>
+<button data-v="1,-4,3">Dva korene</button><button data-v="1,-4,4">Jeden koreň</button><button data-v="1,0,3">Bez reálnych koreňov</button><button data-v="-1,2,3">Ramená nadol</button>
+
+<p id="live-equation" class="formula" style="margin-top: 15px; color:#2785d5;"></p>
+
+
+<p id="error" class="red"></p>
+</section>
+<section class="panel">
+<h2>Graf kvadratickej funkcie</h2>
+<div class="legend"><span class="blue">● Vrchol V</span><span class="red">● Korene</span><span class="green">┄ Os súmernosti</span><span class="orange">━ Graf funkcie</span></div>
+<svg id="graph" viewBox="0 0 700 440" role="img" aria-label="Graf paraboly s vyznačeným vrcholom a koreňmi"></svg>
+<p class="small">Vodorovná os predstavuje x, zvislá os predstavuje y = f(x). Modrá čiara označuje y-ovú súradnicu vrcholu, zelená čiara jeho x-ovú súradnicu.</p>
+<div class="grid2"><div class="stat">Predpis funkcie<b id="equation"></b></div><div class="stat">Diskriminant<b id="disc"></b></div></div>
+</section>
+<section class="panel">
+<h2 class="red">01. Korene kvadratickej rovnice</h2>
+<p class="small">Korene funkcie sú priesečníky grafu s osou x. Hľadáme ich riešením rovnice f(x) = 0.</p>
+<div class="formula">D = b² − 4ac</div><div class="formula">x₁,₂ = (−b ± √D) / 2a</div>
+<p class="small">Dosadenie do diskriminantu:</p><div id="dcalc" class="formula"></div>
+<p class="small">Výpočet koreňov:</p><div id="roots" class="red"></div><p id="rootnote" class="small"></p>
+</section>
+<section class="panel">
+<h2 class="blue">02. Vrchol paraboly</h2>
+<p class="small">Vrchol je najnižší alebo najvyšší bod paraboly.</p>
+<div class="formula">xᵥ = −b / 2a</div><div class="formula">yᵥ = −D / 4a</div>
+<p class="small">Výpočet súradníc vrcholu:</p><div id="vertexcalc" class="formula blue"></div>
+<div class="stat blue">Vrchol paraboly: <b id="vertex"></b><span class="small">x-ová súradnica určuje hranicu intervalov monotónnosti. y-ová súradnica určuje hranicu oboru hodnôt.</span></div>
+</section>
+<section class="panel">
+<h2>03. Vlastnosti kvadratickej funkcie</h2>
+<div class="line"></div><div class="grid2">
+<div><span class="tag purple">D(f)</span><h3>Definičný obor</h3><p class="formula">D(f) = ℝ</p><p class="small">Funkcia je definovaná pre každé reálne číslo.</p></div>
+<div><span class="tag blue">H(f)</span><h3>Obor hodnôt</h3><p id="rangeText" class="small"></p><p id="rangeFormula" class="formula blue"></p><p class="small">Odčítavame ho na zvislej osi y. Hranicou je y-ová súradnica vrcholu.</p></div>
+<div><span class="tag green">M</span><h3>Monotónnosť</h3><p id="mono" class="small"></p><p class="small">Hranicou intervalov je x-ová súradnica vrcholu.</p></div>
+<div><span class="tag orange">a</span><h3>Orientácia ramien</h3><p id="orient" class="small"></p><p class="formula">a &gt; 0: nahor<br>a &lt; 0: nadol</p></div>
+</div>
+</section>
+<section class="panel"><h2>Zapamätaj si – dôležité súvislosti</h2>
+<div class="grid2">
+<div class="stat blue"><b>xᵥ</b><span class="small">Hranica intervalov rastu a klesania.</span></div>
+<div class="stat blue"><b>yᵥ</b><span class="small">Minimum alebo maximum; hranica oboru hodnôt.</span></div>
+<div class="stat orange"><b>a</b><span class="small">Určuje orientáciu ramien paraboly.</span></div>
+<div class="stat red"><b>D</b><span class="small">Určuje počet reálnych koreňov.</span></div>
+</div></section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const fmt=n=>{if(Math.abs(n)<1e-9)n=0;return Number(n.toFixed(3)).toString().replace('.',',')};
+const signed=n=>n<0?' − '+fmt(-n):' + '+fmt(n);
+function update(){
+ const a=Number($('a').value),b=Number($('b').value),c=Number($('c').value);
+ $('error').textContent='';
+ if($('a').value===''||$('b').value===''||$('c').value===''||![a,b,c].every(Number.isFinite)){ $('error').textContent='Zadaj všetky tri číselné koeficienty.';return; }
+ if(a===0){$('error').textContent='Koeficient a musí byť rôzny od nuly. Inak nejde o kvadratickú funkciu.';return;}
+ const D=b*b-4*a*c,xv=-b/(2*a),yv=-D/(4*a),roots=D>=-1e-9?(D<=1e-9?[xv]:[(-b-Math.sqrt(D))/(2*a),(-b+Math.sqrt(D))/(2*a)]):[];
+ $('equation').textContent='f(x) = '+(a===1?'':a===-1?'−':fmt(a))+'x²'+signed(b)+ 'x'+signed(c);
+
+$('live-equation').textContent = $('equation').textContent;
+
+ $('disc').textContent='D = '+fmt(D);
+ $('dcalc').textContent='D = ('+fmt(b)+')² − 4 · ('+fmt(a)+') · ('+fmt(c)+') = '+fmt(D);
+ if(D>1e-9){$('roots').innerHTML='x₁ = '+fmt(roots[0])+'<br>x₂ = '+fmt(roots[1]);$('rootnote').textContent='D > 0: Dva rôzne reálne korene. Graf pretína os x v bodoch ['+fmt(roots[0])+', 0] a ['+fmt(roots[1])+', 0].';}
+ else if(D>=-1e-9){$('roots').textContent='x₁ = x₂ = '+fmt(xv);$('rootnote').textContent='D = 0: Jeden dvojnásobný koreň. Graf sa dotýka osi x vo vrchole.';}
+ else{$('roots').textContent='V množine reálnych čísel korene neexistujú.';$('rootnote').textContent='D < 0: Graf nepretína os x, pretože rovnica nemá reálne riešenie.';}
+ $('vertexcalc').innerHTML='xᵥ = −('+fmt(b)+') / (2 · '+fmt(a)+') = <b>'+fmt(xv)+'</b><br>yᵥ = −('+fmt(D)+') / (4 · '+fmt(a)+') = <b>'+fmt(yv)+'</b>';
+ $('vertex').textContent='V = ['+fmt(xv)+'; '+fmt(yv)+']';
+ $('rangeText').innerHTML=a>0?'Parabola má <b class="blue">minimum</b> vo vrchole. Funkčné hodnoty sú väčšie alebo rovné yᵥ.':'Parabola má <b class="blue">maximum</b> vo vrchole. Funkčné hodnoty sú menšie alebo rovné yᵥ.';
+ $('rangeFormula').textContent=a>0?'H(f) = ⟨'+fmt(yv)+'; +∞)':'H(f) = (−∞; '+fmt(yv)+'⟩';
+ $('mono').innerHTML=a>0?'Funkcia <b class="green">klesá</b> na (−∞; '+fmt(xv)+'⟩ a <b class="green">rastie</b> na ⟨'+fmt(xv)+'; +∞).':'Funkcia <b class="green">rastie</b> na (−∞; '+fmt(xv)+') a <b class="green">klesá</b> na ('+fmt(xv)+'; +∞).';
+ $('orient').innerHTML=a>0?'Keďže <b class="orange">a = '+fmt(a)+' > 0</b>, ramená paraboly smerujú nahor.':'Keďže <b class="orange">a = '+fmt(a)+' < 0</b>, ramená paraboly smerujú nadol.';
+ draw(a,b,c,xv,yv,roots);
+}
+function draw(a,b,c,xv,yv,roots){
+ const svg=$('graph');svg.replaceChildren();const NS='http://www.w3.org/2000/svg';
+ const el=(tag,attrs)=>{const e=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));svg.appendChild(e);return e;};
+ const label=(x,y,s,color='#596579',size=12,anchor='middle')=>{const t=el('text',{x,y,fill:color,'font-size':size,'text-anchor':anchor,'font-weight':'600'});t.textContent=s;};
+ const xmin=Math.min(-5,xv-4,...roots.map(x=>x-2)),xmax=Math.max(5,xv+4,...roots.map(x=>x+2));
+ const ymin=Math.min(-3,yv-3),ymax=Math.max(4,yv+4),L=55,R=18,T=18,B=42,W=700,H=440,pw=W-L-R,ph=H-T-B;
+ const X=x=>L+(x-xmin)/(xmax-xmin)*pw,Y=y=>T+(ymax-y)/(ymax-ymin)*ph;
+ for(let i=0;i<=10;i++){let x=xmin+(xmax-xmin)*i/10,px=X(x);el('line',{x1:px,y1:T,x2:px,y2:T+ph,stroke:'#e5e9f0'});if(i%2===0)label(px,H-18,fmt(x),'#697586',10);}
+ for(let i=0;i<=8;i++){let y=ymin+(ymax-ymin)*i/8,py=Y(y);el('line',{x1:L,y1:py,x2:L+pw,y2:py,stroke:'#e5e9f0'});if(i%2===0)label(L-8,py+4,fmt(y),'#697586',10,'end');}
+ if(xmin<=0&&xmax>=0){el('line',{x1:X(0),y1:T,x2:X(0),y2:T+ph,stroke:'#697586','stroke-width':2});label(X(0)+10,T+14,'y');}
+ if(ymin<=0&&ymax>=0){el('line',{x1:L,y1:Y(0),x2:L+pw,y2:Y(0),stroke:'#697586','stroke-width':2});label(L+pw-8,Y(0)-9,'x');}
+ el('line',{x1:X(xv),y1:T,x2:X(xv),y2:T+ph,stroke:'#15956b','stroke-width':2,'stroke-dasharray':'7 5'});
+ el('line',{x1:L,y1:Y(yv),x2:L+pw,y2:Y(yv),stroke:'#2785d5','stroke-width':2,'stroke-dasharray':'6 5'});
+ label(X(xv)+7,T+15,'xᵥ','#15956b',12,'start');
+ let d='';for(let i=0;i<=500;i++){const x=xmin+(xmax-xmin)*i/500,y=a*x*x+b*x+c;d+=(i?'L':'M')+X(x)+','+Y(y);}
+ el('path',{d,fill:'none',stroke:'#c78316','stroke-width':3,'stroke-linecap':'round'});
+ roots.forEach((x,i)=>{el('circle',{cx:X(x),cy:Y(0),r:6,fill:'#d95757',stroke:'#fff','stroke-width':2});label(X(x),Y(0)-13,'x'+(roots.length===1?'₁':i===0?'₁':'₂'),'#d95757',13);});
+ if(xv>=xmin&&xv<=xmax&&yv>=ymin&&yv<=ymax){el('circle',{cx:X(xv),cy:Y(yv),r:7,fill:'#2785d5',stroke:'#fff','stroke-width':2});label(X(xv)+10,Y(yv)-12,'V ['+fmt(xv)+'; '+fmt(yv)+']','#2785d5',12,'start');}
+}
+document.querySelectorAll('input').forEach(i=>i.addEventListener('input',update));
+document.querySelectorAll('button[data-v]').forEach(b=>b.addEventListener('click',()=>{['a','b','c'].forEach((id,i)=>$(id).value=b.dataset.v.split(',')[i]);update();}));
+update();
+</script></body></html>
